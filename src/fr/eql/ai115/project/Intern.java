@@ -22,4 +22,59 @@ public class Intern {
         this.year = year;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(String promotion) {
+        this.promotion = promotion;
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(int department) {
+        this.department = department;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getChildNodeLeftPointer() {
+        return childNodeLeftPointer;
+    }
+
+    public void setChildNodeLeftPointer(int childNodeLeftPointer) {
+        this.childNodeLeftPointer = childNodeLeftPointer;
+    }
+
+    public int getChildNodeRightPointer() {
+        return childNodeRightPointer;
+    }
+
+    public void setChildNodeRightPointer(int childNodeRightPointer) {
+        this.childNodeRightPointer = childNodeRightPointer;
+    }
 }

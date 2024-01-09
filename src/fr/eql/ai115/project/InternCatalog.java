@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -29,6 +30,8 @@ public class InternCatalog {
     private int internsCount;
 
 
+
+
     /**
      * This constructor will create the RandomAccessFile instance used to write and read celestial objects.
      * @param sourceFile The path to the text file containing the list of
@@ -48,47 +51,69 @@ public class InternCatalog {
         }
     }
 
-    private String splitMyString(String string){
-        StringBuffer sb = new StringBuffer();
-        String s3 = string.replaceAll("\r\n", " ");
-        System.out.println(s3);
-        sb.append(string);
-        return sb.toString();
-    }
+    public List<String> formattedString() throws IOException {
+        List<String> arrayListString = new ArrayList<>();
+        try {
+            // Variable pour stocker chaque ligne formatée
+            StringBuilder formattedLine = new StringBuilder();
 
-    private Intern createIntern(String chaine){
-        Intern intern=null;
-        String chaineTokenizer = splitMyString(chaine);
-        StringTokenizer st = new StringTokenizer(chaineTokenizer, "\r\n");
-        if(st.countTokens()==5){
-            String promotion = st.nextToken();
-            int year = Integer.parseInt(st.nextToken());
-            String lastName = st.nextToken();
-            String firstName= st.nextToken();
-            int department = Integer.parseInt(st.nextToken());
-            intern = new Intern(lastName, firstName, promotion, department, year);
+            // Boucle de lecture des lignes du fichier d'entrée
+            String line;
+            while ((line = bfr.readLine()) != null) {
+                // Supprime les astérisques (*)
+                line = line.replace("*", "");
+
+
+                // Ajoute chaque élément de la ligne formatée à la StringBuilder
+                formattedLine.append("*").append(line);
+                // Si la ligne contient un espace vide, écrire la ligne formatée dans le fichier
+                if (line.trim().isEmpty()) {
+                    arrayListString.add(formattedLine.toString().trim());
+
+                    // Réinitialise la StringBuilder pour la ligne suivante
+                    formattedLine.setLength(0);
+                }
+            }
+
+            // Ferme les lecteurs et flux d'écriture
+            bfr.close();
+
+        } catch (IOException e) {
+            logger.error(e);
         }
-        return intern;
+        return arrayListString;
     }
 
-    public List<Intern> createVector(){
+
+    //Transformer le fichier en une collection d'employés
+    public List<Intern> createVector(ArrayList<String> myList){
         String chaine;
         Intern intern;
         List<Intern> interns = new Vector<Intern>();
-        try{
-            do{
-                chaine = bfr.readLine();
-//                System.out.println(chaine);
-
-                if(chaine!=null){
-                    intern= createIntern(chaine);
-                    interns.add(intern);
-                }
-            }while(chaine!=null);
-
-        }catch(IOException e){
-            System.out.println("Problème de lecture : " +e.getMessage());
+        for (String str : myList) {
+            chaine = str;
+            if(chaine!=null){
+                intern= createIntern(chaine);
+                interns.add(intern);
+            }
         }
+
         return interns;
+    }
+
+    // Transforme une chaine en un objet de type Employe
+    //format de la chaine : 1*BARBE*Rue des Vignes Paris*0123546789*10000
+    private Intern createIntern(String chaine){
+        Intern intern=null;
+        StringTokenizer st = new StringTokenizer(chaine, "*");
+        if(st.countTokens()==5){
+            String promotion = st.nextToken();
+            int year = Integer.parseInt(st.nextToken());
+            String lastName= st.nextToken();
+            String firstName = st.nextToken();
+            int department= Integer.parseInt(st.nextToken());
+            intern = new Intern(lastName,firstName,promotion,department,year);
+        }
+        return intern;
     }
 }
